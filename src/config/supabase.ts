@@ -34,13 +34,6 @@ if (isPlaceholder) {
     })
   } as any;
 } else {
-  // Validate URL format
-  try {
-    new URL(supabaseUrl);
-  } catch (error) {
-    throw new Error('Invalid VITE_SUPABASE_URL format. Please ensure it follows the pattern: https://your-project.supabase.co');
-  }
-
   export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       autoRefreshToken: true,
