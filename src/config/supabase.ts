@@ -3,34 +3,57 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Better error handling for missing environment variables
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase configuration error:', {
-    url: supabaseUrl ? 'Set' : 'Missing VITE_SUPABASE_URL',
-    key: supabaseAnonKey ? 'Set' : 'Missing VITE_SUPABASE_ANON_KEY'
-  });
-  throw new Error('Missing Supabase environment variables. Please check your .env file and ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set.');
-}
+// Check if we're using placeholder values
+const isPlaceholder = supabaseUrl === 'https://your-project-id.supabase.co' || 
+                     supabaseAnonKey === 'your-anon-key-here' ||
+                     !supabaseUrl || 
+                     !supabaseAnonKey;
 
-// Validate URL format
-try {
-  new URL(supabaseUrl);
-} catch (error) {
-  throw new Error('Invalid VITE_SUPABASE_URL format. Please ensure it follows the pattern: https://your-project.supabase.co');
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10
-    }
+if (isPlaceholder) {
+  console.error('🚨 Supabase Configuration Required');
+  console.error('Please update your .env file with actual Supabase credentials:');
+  console.error('1. Go to https://supabase.com/dashboard');
+  console.error('2. Create a new project or select existing one');
+  console.error('3. Go to Settings > API');
+  console.error('4. Copy Project URL and anon/public key to .env file');
+  
+  // Create a mock client to prevent app crashes during development
+  export const supabase = {
+    auth: {
+      signUp: () => Promise.reject(new Error('Supabase not configured. Please update .env file with your Supabase credentials.')),
+      signInWithPassword: () => Promise.reject(new Error('Supabase not configured. Please update .env file with your Supabase credentials.')),
+      signOut: () => Promise.reject(new Error('Supabase not configured. Please update .env file with your Supabase credentials.')),
+      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
+    },
+    from: () => ({
+      select: () => Promise.reject(new Error('Supabase not configured. Please update .env file with your Supabase credentials.')),
+      insert: () => Promise.reject(new Error('Supabase not configured. Please update .env file with your Supabase credentials.')),
+      update: () => Promise.reject(new Error('Supabase not configured. Please update .env file with your Supabase credentials.')),
+      delete: () => Promise.reject(new Error('Supabase not configured. Please update .env file with your Supabase credentials.'))
+    })
+  } as any;
+} else {
+  // Validate URL format
+  try {
+    new URL(supabaseUrl);
+  } catch (error) {
+    throw new Error('Invalid VITE_SUPABASE_URL format. Please ensure it follows the pattern: https://your-project.supabase.co');
   }
-});
+
+  export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    },
+    realtime: {
+      params: {
+        eventsPerSecond: 10
+      }
+    }
+  });
+}
 
 export type Database = {
   public: {
