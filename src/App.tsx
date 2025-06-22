@@ -1,27 +1,27 @@
-import { useState } from 'react'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ThemeProvider } from 'next-themes';
+import { Toaster } from '@/components/ui/sonner';
+import Index from '@/pages/Index';
+
+const queryClient = new QueryClient();
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <h1>Vite + React</h1>
-        <div className="card">
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test HMR
-          </p>
-        </div>
-        <p className="read-the-docs">
-          Click on the Vite and React logos to learn more
-        </p>
-      </div>
-    </>
-  )
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <Router>
+          <div className="min-h-screen bg-background text-foreground">
+            <Routes>
+              <Route path="/" element={<Index />} />
+            </Routes>
+          </div>
+        </Router>
+        <Toaster />
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
