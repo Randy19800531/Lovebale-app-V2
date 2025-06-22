@@ -11,8 +11,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       jsxRuntime: 'automatic',
-      include: /\.(tsx)$/,
-      exclude: /(?<![jt]sx)\ts$/
+      include: /\.(tsx)$/
     }),
   ],
   resolve: {
