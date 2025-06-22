@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useTheme } from '@/components/theme/ThemeProvider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { Eye, EyeOff, UserPlus } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, Sparkles } from 'lucide-react';
 
 interface SignUpFormProps {
   onToggleMode: () => void;
@@ -13,6 +14,7 @@ interface SignUpFormProps {
 
 export const SignUpForm: React.FC<SignUpFormProps> = ({ onToggleMode }) => {
   const { signUp, loading } = useAuth();
+  const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -40,12 +42,26 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onToggleMode }) => {
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-        <CardDescription>
-          Join Zero-Point.AI and start automating
-        </CardDescription>
+    <Card className="w-full max-w-md border-0 shadow-2xl bg-white/95 backdrop-blur-sm">
+      <CardHeader className="text-center pb-6">
+        <div className="flex items-center justify-center space-x-3 mb-4">
+          <img 
+            src={theme.logoUrl} 
+            alt={theme.brandName}
+            className="h-12 w-12 object-contain"
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+            }}
+          />
+          <div>
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+              Create Account
+            </CardTitle>
+            <CardDescription className="text-gray-600">
+              Join {theme.brandName} and start automating
+            </CardDescription>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -58,6 +74,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onToggleMode }) => {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
+              className="border-gray-200 focus:border-orange-300 focus:ring-orange-200"
             />
           </div>
 
@@ -70,6 +87,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onToggleMode }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="border-gray-200 focus:border-orange-300 focus:ring-orange-200"
             />
           </div>
           
@@ -84,6 +102,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onToggleMode }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
+                className="border-gray-200 focus:border-orange-300 focus:ring-orange-200 pr-10"
               />
               <Button
                 type="button"
@@ -101,9 +120,16 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onToggleMode }) => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button 
+            type="submit" 
+            className={`w-full bg-gradient-to-r ${theme.primaryColor} hover:opacity-90 transition-opacity text-white border-0`}
+            disabled={loading}
+          >
             {loading ? (
-              'Creating account...'
+              <div className="flex items-center space-x-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <span>Creating account...</span>
+              </div>
             ) : (
               <>
                 <UserPlus className="mr-2 h-4 w-4" />
@@ -113,10 +139,14 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onToggleMode }) => {
           </Button>
         </form>
 
-        <div className="mt-4 text-center">
+        <div className="mt-6 text-center">
           <p className="text-sm text-muted-foreground">
             Already have an account?{' '}
-            <Button variant="link" className="p-0" onClick={onToggleMode}>
+            <Button 
+              variant="link" 
+              className="p-0 text-transparent bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text hover:opacity-80" 
+              onClick={onToggleMode}
+            >
               Sign in
             </Button>
           </p>

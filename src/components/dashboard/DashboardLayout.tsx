@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useTheme } from '@/components/theme/ThemeProvider';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   LayoutDashboard, 
   Code, 
@@ -12,7 +12,8 @@ import {
   Settings,
   LogOut,
   User,
-  Crown
+  Crown,
+  Palette
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -22,6 +23,7 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const { user, signOut } = useAuth();
+  const { theme } = useTheme();
   const location = useLocation();
 
   const navigation = [
@@ -31,6 +33,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
     { name: 'AI Testing', href: '/ai-testing', icon: TestTube },
     { name: 'Agency Workspace', href: '/agency-workspace', icon: Building },
     { name: 'Monetization Hub', href: '/monetization-hub', icon: DollarSign },
+    { name: 'Theme Customizer', href: '/theme-customizer', icon: Palette },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -49,10 +52,20 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
       <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg">
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center justify-center border-b border-gray-200 dark:border-gray-700">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-              Zero-Point.AI
-            </h1>
+          <div className="flex h-16 items-center justify-center border-b border-gray-200 dark:border-gray-700 px-4">
+            <div className="flex items-center space-x-3">
+              <img 
+                src={theme.logoUrl} 
+                alt={theme.brandName}
+                className="h-8 w-8 object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+              <h1 className="text-lg font-bold bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+                {theme.brandName}
+              </h1>
+            </div>
           </div>
 
           {/* Navigation */}
@@ -65,7 +78,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
                   to={item.href}
                   className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors ${
                     isActive(item.href)
-                      ? 'bg-blue-100 text-blue-900 dark:bg-blue-900 dark:text-blue-100'
+                      ? 'bg-gradient-to-r from-orange-100 via-pink-100 to-purple-100 text-gray-900 dark:from-orange-900/20 dark:via-pink-900/20 dark:to-purple-900/20 dark:text-white'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
                   }`}
                 >
@@ -80,7 +93,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
           <div className="border-t border-gray-200 dark:border-gray-700 p-4">
             <div className="flex items-center space-x-3 mb-3">
               <div className="flex-shrink-0">
-                <User className="h-8 w-8 text-gray-400" />
+                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 flex items-center justify-center">
+                  <User className="h-4 w-4 text-white" />
+                </div>
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
