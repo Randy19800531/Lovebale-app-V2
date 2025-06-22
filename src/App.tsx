@@ -35,7 +35,7 @@ function AuthPage() {
   );
 }
 
-function AppRoutes() {
+export function AppRoutes() {
   const { user, loading } = useAuth();
 
   if (loading) {
