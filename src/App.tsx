@@ -16,7 +16,7 @@ import { useState } from 'react';
 
 const queryClient = new QueryClient();
 
-function AuthPage() {
+export function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
 
   return (
