@@ -16,7 +16,7 @@ import { useState } from 'react';
 
 const queryClient = new QueryClient();
 
-const AuthPage: React.FC = () => {
+function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
 
   return (
@@ -33,9 +33,9 @@ const AuthPage: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
-const AppRoutes: React.FC = () => {
+function AppRoutes() {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -68,7 +68,7 @@ const AppRoutes: React.FC = () => {
       </Routes>
     </DashboardLayout>
   );
-};
+}
 
 function App() {
   return (
