@@ -10,7 +10,8 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react({
-      jsxRuntime: 'automatic'
+      jsxRuntime: 'automatic',
+      include: /\.(tsx)$/
     }),
   ],
   resolve: {
